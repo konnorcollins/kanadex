@@ -1,0 +1,7 @@
+# will add more as needed
+
+data
+node_modules
+*.log
+*.lock
+.vscode
