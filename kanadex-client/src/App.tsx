@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 
 import './App.css'
-import BitCanvas from './Canvas'
+import BitCanvas from './BitCanvas'
 import testImage from './assets/violin_concerto.png'
 
 
