@@ -70,7 +70,7 @@ function App() {
           <button onClick={() => handlePalleteSwap('gothic')}>gothic</button>
       </div>
       <div className="card">
-          <BitCanvas baseImage={image} altColors={altColors} />
+          <BitCanvas baseImage={image} width={195} height={164} altColors={altColors} />
       </div>
       <div className="card">
         <p>todo</p>

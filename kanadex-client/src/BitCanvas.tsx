@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
 
 type BitCanvasProps = {
-    baseImage: HTMLImageElement
-    altColors: Map<string, string>
+    baseImage: HTMLImageElement;
+    width: number;
+    height: number;
+    altColors: Map<string, string>;
 };
 
 // helper functions
@@ -30,7 +32,7 @@ const translateColor = (hex: string, altColors: Map<string, string>): string =>
     return hex
 }
 
-function BitCanvas({baseImage, altColors}: BitCanvasProps) {
+function BitCanvas({baseImage, width, height, altColors}: BitCanvasProps) {
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -72,8 +74,8 @@ function BitCanvas({baseImage, altColors}: BitCanvasProps) {
     return (
         <canvas 
             ref={canvasRef}
-            width="195"
-            height="164"
+            width={width}
+            height={height}
             style={{ border: "2px solid black"}}
         />
     )
