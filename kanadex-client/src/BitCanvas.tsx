@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 
-type BitCanvasProps = {
+
+export type BitCanvasProps = {
     baseImage: HTMLImageElement;
     width: number;
     height: number;
-    altColors: Map<string, string>;
+    altColors: string[];
 };
 
 // helper functions
@@ -22,54 +23,90 @@ const getColorValues = (hex: string): Array<number> => {
     return [r, g, b]
 }
 
-const translateColor = (hex: string, altColors: Map<string, string>): string =>
+const BASE_COLOR_0 = "000000"; // white
+const BASE_COLOR_1 = "ffffff"; // black
+const BASE_COLOR_2 = "ff40ff"; // bright pink
+const BASE_COLOR_3 = "c000c0"; // dark pink
+
+const translateColor = (hex: string, twoBit: boolean, ...altColors: string[]): string =>
 {
+    // just in case we somehow mess up the parameters
+    if (altColors.length != 2 && altColors.length != 4) return hex;
 
-    const translatedHex = altColors.get(hex);
-    if (translatedHex) return translatedHex
-
-    // failsafe
-    return hex
+    switch(hex)
+    {
+        case(BASE_COLOR_0):
+            return altColors[0];
+        case(BASE_COLOR_1):
+            return altColors[1];
+        case(BASE_COLOR_2):
+            return twoBit ? altColors[2] : altColors[0];
+        case(BASE_COLOR_3):
+            return twoBit ? altColors[3] : altColors[1];
+        default:
+            return hex;
+    }
 }
 
 function BitCanvas({baseImage, width, height, altColors}: BitCanvasProps) {
 
+    const [twoBitFlag, twoBitToggle] = useState(true);
+
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const context = canvasRef.current?.getContext('2d');
+
+    // store the original information here
+    let ORIGINAL_IMAGE_DATA:  ImageData;
+
+    // store the 'modified' image here in case of a refresh?
 
     // "000000"; // white
     // "FFFFFF"; // black
     // "FF40FF"; // bright pink
     // "C000C0"; // dark pink
 
-    useEffect(() => {
-        if (canvasRef.current)
-        {
-            const context = canvasRef.current.getContext('2d');
+    // handle loading the original image
+    const loadImage = () =>
+    {
+        if (!context) return;
+        context.drawImage(baseImage, 0, 0);
+        ORIGINAL_IMAGE_DATA = context.getImageData(0, 0, width, height);
+    }
 
-            context?.drawImage(baseImage, 0, 0)
+    // handle loading the image with the alternative colors applied over it
+    const drawImage = () =>
+    {
+        // a:"What do you mean if there isn't a reference?"
+        // b:"I'm just asking questions"
+        if (!canvasRef.current) return;
+        if (!context) return;
 
-            
-            let imgData = context?.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
-            if (imgData) {
-                for (let i = 0; i < imgData?.data.length; i+= 4)
-                {
+        // draw the original image
+        context.putImageData(ORIGINAL_IMAGE_DATA, 0, 0) 
 
-                    const originalHex = getColorString(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2])
-                    const translatedHex = translateColor(originalHex, altColors);
-                    const [r, g, b] = getColorValues(translatedHex);
+        // if alternative colors are defined, load the image data, modify, and re-put
+        // todo: add some sort of conditional here
+        let imgData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+        if (imgData) {
+            for (let i = 0; i < imgData.data.length; i+= 4)
+            {
+                // grab the hex value, (optionally) translate it, then set the rgb values manually
+                const originalHex = getColorString(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2])
+                const translatedHex = translateColor(originalHex, twoBitFlag, ...altColors); 
+                const [r, g, b] = getColorValues(translatedHex);
 
-                    // r
-                    imgData.data[i] = r;
-                    imgData.data[i + 1] = g;
-                    imgData.data[i + 2] = b;
-                    //imgData.data[i + 3] = 255;
-                }
-                context?.putImageData(imgData, 0, 0);
+                imgData.data[i] = r;
+                imgData.data[i + 1] = g;
+                imgData.data[i + 2] = b;
+                //imgData.data[i + 3] = 255; // uncomment in case we need an alpha channel clamp 
             }
-            
-            
-        }    
-    });
+            context.putImageData(imgData, 0, 0);
+        }
+    }
+
+
+    loadImage()
+    drawImage()
 
     return (
         <canvas 
