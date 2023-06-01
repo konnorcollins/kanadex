@@ -1,10 +1,11 @@
-import './App.css'
+// App.tsx
 import BitCanvas from './BitCanvas'
-import testImage from './assets/violin_concerto.png'
-
 import { useAppDispatch, useAppSelector } from './app/Hooks'
 import { setColorPallete, toggleTwoBitsFlag } from './features/ColorPalettes/ColorPaletteSlice'
 import { DEFAULT_PALETTE, GOTHIC, RETRO_DARK } from './features/ColorPalettes/ColorPalettes'
+
+import './App.css'
+import testImage from './assets/violin_concerto.png'
 
 function App() {
   const colorPalette = useAppSelector((state) => state.colorPalette);

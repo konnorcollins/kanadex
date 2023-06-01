@@ -1,14 +1,16 @@
-import { useRef, useState } from "react";
+// BitCanvas.tsx
+
+import { useRef } from "react";
 import { useAppSelector } from "./app/Hooks";
 
-
-export type BitCanvasProps = {
+export interface BitCanvasProps {
     baseImage: HTMLImageElement;
     width: number;
     height: number;
 };
 
 // helper functions
+// converts r,g,b values between 0-255 into a 6-digit hex string
 const getColorString = (r: number, g: number, b: number): string => {
     const rstr = r.toString(16).padStart(2, '0');
     const gstr = g.toString(16).padStart(2, '0');
@@ -16,6 +18,7 @@ const getColorString = (r: number, g: number, b: number): string => {
     return rstr + gstr + bstr
 }
 
+// converts a 6-digit hex string into r,g,b values between 0-255 (inclusive)
 const getColorValues = (hex: string): Array<number> => {
     const r = parseInt(hex.slice(0, 2), 16);
     const g = parseInt(hex.slice(2, 4), 16);
@@ -28,6 +31,7 @@ const BASE_COLOR_1 = "ffffff"; // black
 const BASE_COLOR_2 = "ff40ff"; // bright pink
 const BASE_COLOR_3 = "c000c0"; // dark pink
 
+// handles translating the expected stock colors into your selected palette
 const translateColor = (hex: string, twoBit: boolean, ...altColors: string[]): string =>
 {
     // just in case we somehow mess up the parameters
@@ -78,12 +82,11 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
         context.putImageData(ORIGINAL_IMAGE_DATA, 0, 0) 
 
         // if alternative colors are defined, load the image data, modify, and re-put
-        // todo: add some sort of conditional here
         let imgData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
         if (imgData) {
             for (let i = 0; i < imgData.data.length; i+= 4)
             {
-                // grab the hex value, (optionally) translate it, then set the rgb values manually
+                // grab the hex value, (optionally) translate it to the selected palette, then set the rgb values manually
                 const originalHex = getColorString(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2])
                 const translatedHex = translateColor(originalHex, colorPalette.twoBitsFlag, ...colorPalette.colors); 
                 const [r, g, b] = getColorValues(translatedHex);
