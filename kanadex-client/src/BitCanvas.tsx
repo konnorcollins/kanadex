@@ -88,7 +88,7 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
             {
                 // grab the hex value, (optionally) translate it to the selected palette, then set the rgb values manually
                 const originalHex = getColorString(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2])
-                const translatedHex = translateColor(originalHex, colorPalette.twoBitsFlag, ...colorPalette.colors); 
+                const translatedHex = translateColor(originalHex, colorPalette.twoBitsFlag, ...colorPalette.palette.colors); 
                 const [r, g, b] = getColorValues(translatedHex);
 
                 imgData.data[i] = r;
@@ -109,7 +109,7 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
             ref={canvasRef}
             width={width}
             height={height}
-            style={{ border: "2px solid black"}}
+            style={{ border: "2px solid black", width: "100%", height: "100%",}}
         />
     )
 }
