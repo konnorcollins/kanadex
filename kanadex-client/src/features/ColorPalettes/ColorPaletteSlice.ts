@@ -2,15 +2,15 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { DEFAULT_PALETTE } from './ColorPalettes';
+import { ColorPalette, DEFAULT_PALETTE } from './ColorPalettes';
 
 interface ColorPalleteState {
-    colors: string[];
+    palette: ColorPalette;
     twoBitsFlag: boolean;
 }
 
 const initialState: ColorPalleteState = {
-    colors: DEFAULT_PALETTE,
+    palette: DEFAULT_PALETTE,
     twoBitsFlag: true,
 };
 
@@ -21,8 +21,8 @@ const colorPaletteSlice = createSlice({
         toggleTwoBitsFlag(state) {
             state.twoBitsFlag = !state.twoBitsFlag;
         },
-        setColorPallete(state, action: PayloadAction<string[]>) {
-            state.colors = [...action.payload]
+        setColorPallete(state, action: PayloadAction<ColorPalette>) {
+            state.palette = action.payload;
         },
     }
 });
