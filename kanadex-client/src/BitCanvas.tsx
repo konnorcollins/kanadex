@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
+import { useAppSelector } from "./app/Hooks";
 
 
 export type BitCanvasProps = {
     baseImage: HTMLImageElement;
     width: number;
     height: number;
-    altColors: string[];
 };
 
 // helper functions
@@ -48,22 +48,15 @@ const translateColor = (hex: string, twoBit: boolean, ...altColors: string[]): s
     }
 }
 
-function BitCanvas({baseImage, width, height, altColors}: BitCanvasProps) {
-
-    const [twoBitFlag, twoBitToggle] = useState(true);
+function BitCanvas({baseImage, width, height}: BitCanvasProps) {
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const context = canvasRef.current?.getContext('2d');
 
+    const colorPalette = useAppSelector((state) => state.colorPalette);
+
     // store the original information here
     let ORIGINAL_IMAGE_DATA:  ImageData;
-
-    // store the 'modified' image here in case of a refresh?
-
-    // "000000"; // white
-    // "FFFFFF"; // black
-    // "FF40FF"; // bright pink
-    // "C000C0"; // dark pink
 
     // handle loading the original image
     const loadImage = () =>
@@ -92,7 +85,7 @@ function BitCanvas({baseImage, width, height, altColors}: BitCanvasProps) {
             {
                 // grab the hex value, (optionally) translate it, then set the rgb values manually
                 const originalHex = getColorString(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2])
-                const translatedHex = translateColor(originalHex, twoBitFlag, ...altColors); 
+                const translatedHex = translateColor(originalHex, colorPalette.twoBitsFlag, ...colorPalette.colors); 
                 const [r, g, b] = getColorValues(translatedHex);
 
                 imgData.data[i] = r;
