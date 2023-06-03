@@ -5,11 +5,14 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 
 import { store } from './app/Store.ts';
-import App from './App.tsx'
 import './index.css'
+import './App.css'
+
+import Index from './scenes/index.tsx';
 import Root from './scenes/root/index.tsx';
 import Gallery from './scenes/gallery/index.tsx';
 import ErrorPage from './ErrorPage.tsx';
+
 
 
 const router = createBrowserRouter([
@@ -18,6 +21,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        index: true,
+        element: <Index />
+      },
       {
         path: "gallery",
         element: <Gallery />,
