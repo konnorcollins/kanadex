@@ -1,4 +1,6 @@
-import { Box, Divider, Drawer, FormControl, InputLabel, List, ListItem, ListItemButton, MenuItem, Select, Switch } from "@mui/material";
+import { Box, Divider, Drawer, FormControl, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, Switch, Typography } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home"
+import CollectionsIcon from '@mui/icons-material/Collections';
 
 import { ALL_PALETTES, ColorPalette } from "../../features/ColorPalettes/ColorPalettes";
 import { useAppDispatch, useAppSelector } from "../../app/Hooks";
@@ -35,14 +37,30 @@ function Root()
             <Drawer
                 variant="permanent"
                 anchor="left"
-                sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': {width: drawerWidth, boxSizing: "border-box"} }}
+                sx={{ width: drawerWidth, flexShrink: 0, 
+                    '& .MuiDrawer-paper': {width: drawerWidth, boxSizing: "border-box"},
+                 }}
                 >
                 <List>
+                    <ListItem>                  
+                        <ListItemText><Typography variant="h5">KanaDex</Typography></ListItemText>
+                    </ListItem>
+                    <Divider />
                     <ListItem>
-                        <Link to={'/'}><ListItemButton>Home</ListItemButton></Link>
+                        <Link to={'/'}>
+                            <ListItemButton>
+                                <ListItemIcon><HomeIcon /></ListItemIcon>
+                                <Typography variant="h5">Home</Typography>
+                            </ListItemButton>
+                        </Link>
                     </ListItem>
                     <ListItem>
-                        <Link to={'gallery'}><ListItemButton>Gallery</ListItemButton></Link>
+                        <Link to={'gallery'}>
+                                <ListItemButton>
+                                    <ListItemIcon><CollectionsIcon /></ListItemIcon>
+                                    <Typography variant="h5">Gallery</Typography>
+                                </ListItemButton>
+                            </Link>
                     </ListItem>
                     <Divider />
                     <ListItem>
