@@ -1,6 +1,6 @@
 // BitCanvas.tsx
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useAppSelector } from "./app/Hooks";
 
 export interface BitCanvasProps {
@@ -55,7 +55,7 @@ const translateColor = (hex: string, twoBit: boolean, ...altColors: string[]): s
 function BitCanvas({baseImage, width, height}: BitCanvasProps) {
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const context = canvasRef.current?.getContext('2d');
+    let context: CanvasRenderingContext2D;
 
     const colorPalette = useAppSelector((state) => state.colorPalette);
 
@@ -65,7 +65,10 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
     // handle loading the original image
     const loadImage = () =>
     {
-        if (!context) return;
+        if (!canvasRef.current) return;
+        let ctx = canvasRef.current.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return;
+        context = ctx;
         context.drawImage(baseImage, 0, 0);
         ORIGINAL_IMAGE_DATA = context.getImageData(0, 0, width, height);
     }
@@ -88,7 +91,7 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
             {
                 // grab the hex value, (optionally) translate it to the selected palette, then set the rgb values manually
                 const originalHex = getColorString(imgData.data[i], imgData.data[i + 1], imgData.data[i + 2])
-                const translatedHex = translateColor(originalHex, colorPalette.twoBitsFlag, ...colorPalette.colors); 
+                const translatedHex = translateColor(originalHex, colorPalette.twoBitsFlag, ...colorPalette.palette.colors); 
                 const [r, g, b] = getColorValues(translatedHex);
 
                 imgData.data[i] = r;
@@ -100,16 +103,19 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
         }
     }
 
-
-    loadImage()
-    drawImage()
+    useEffect(() => {
+        const initialLoad = async () => {
+            loadImage();
+        }
+        initialLoad().finally(() => drawImage())
+    });
 
     return (
         <canvas 
             ref={canvasRef}
             width={width}
             height={height}
-            style={{ border: "2px solid black"}}
+            style={{ border: "2px solid black", width: "100%", height: "100%",}}
         />
     )
 }
