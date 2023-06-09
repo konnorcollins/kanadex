@@ -8,7 +8,7 @@ export interface BitCanvasProps {
     baseImage: HTMLImageElement;
     width: number;
     height: number;
-};
+}
 
 function BitCanvas({baseImage, width, height}: BitCanvasProps) {
 
@@ -24,7 +24,7 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
     const loadImage = () =>
     {
         if (!canvasRef.current) return;
-        let ctx = canvasRef.current.getContext('2d', { willReadFrequently: true });
+        const ctx = canvasRef.current.getContext('2d', { willReadFrequently: true });
         if (!ctx) return;
         context = ctx;
         context.drawImage(baseImage, 0, 0);
@@ -43,7 +43,7 @@ function BitCanvas({baseImage, width, height}: BitCanvasProps) {
         context.putImageData(ORIGINAL_IMAGE_DATA, 0, 0) 
 
         // if alternative colors are defined, load the image data, modify, and re-put
-        let imgData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
+        const imgData = context.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height);
         if (imgData) {
             for (let i = 0; i < imgData.data.length; i+= 4)
             {
