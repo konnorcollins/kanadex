@@ -1,9 +1,9 @@
 services:
 
   sftp:
-    image: atmoz/sftp
+    image: atmoz/sftp:alpine
     volumes:
-        - <host-dir>/upload:/home/foo/upload
+        - ./upload:/home/foo/upload
     ports:
         - "2222:22"
     command: foo:pass:1001
@@ -13,9 +13,10 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: example
+      
   
   api:
-    build: ./kanadex-server
+    build: ./kanadex-api
     ports:
       - "8080:8080"
     
