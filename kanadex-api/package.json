@@ -1,0 +1,20 @@
+{
+  "name": "kanadex-server",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/multer": "^1.4.8",
+    "@types/node": "^20.6.3",
+    "typescript": "^5.2.2"
+  }
+}
