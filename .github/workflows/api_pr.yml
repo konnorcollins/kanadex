@@ -1,0 +1,29 @@
+name: Api pull request
+
+on:
+    pull_request:
+        branches-ignore:
+            - 'releases/**'
+        paths:
+            - 'kanadex-api/**'
+
+env:
+    CLIENT_SUB_DIRECTORY: kanadex-api            
+
+jobs:
+    test_pull_request:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                node-version: 19
+            - name: npm install, test
+              run: |
+                cd ${{ env.CLIENT_SUB_DIRECTORY }}
+                npm ci
+                npm run test --if-present
+            - name: run eslint
+              run: |
+                cd ${{ env.CLIENT_SUB_DIRECTORY }}
+                npm run lint
