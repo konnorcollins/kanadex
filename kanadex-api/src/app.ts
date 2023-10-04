@@ -2,7 +2,7 @@ import express, { Express } from 'express'
 
 import attachment_routes from './attachments/routes';
 
-const port = 3000;
+const port = 5050;
 
 const app: Express = express();
 
