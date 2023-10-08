@@ -1,3 +1,4 @@
+import { Attachment } from "./attachment";
 import { Storage } from "./storage/storage";
 
 export class UploadRequest {
@@ -7,8 +8,9 @@ export class UploadRequest {
         this.storage = storage;
     }
 
-    async upload(attachment: any, mime_type: string) {
+    async upload(attachment: Attachment, mime_type: string) {
 
+        console.log(mime_type)
         return await this.storage.upload(attachment)
     }
 }

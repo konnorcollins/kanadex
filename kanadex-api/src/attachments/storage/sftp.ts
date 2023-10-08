@@ -1,36 +1,40 @@
 import Client from 'ssh2-sftp-client'
 
 import { Storage } from "./storage";
+import { Attachment } from '../attachment';
 
 export class SftpStorage implements Storage {
     private readonly host: string;
     private readonly port: number;
     private readonly username: string;
-    private readonly private_key: Buffer;
-    private readonly sftp_client: Client = new Client();
+    private readonly password: string;
 
-    constructor(host: string, port: number, username: string, private_key: Buffer) {
+    constructor(host: string, port: number, username: string, password: string) {
         this.host = host;
         this.port = port;
         this.username = username;
-        this.private_key = private_key;
+        this.password = password;
     }
 
-    upload(attachment: any): Promise<string> {
+    upload(attachment: Attachment): Promise<string> {
         const config: Client.ConnectOptions = {
             host: this.host,
             port: this.port,
             username: this.username,
-            privateKey: this.private_key
+            password: this.password,
         };
 
-        return this.sftp_client.connect(config)
+        const sftp_client = new Client();
+
+        console.log(attachment.local_path);
+        return sftp_client.connect(config)
             .then(() => {
-                return this.sftp_client.cwd();
+                return sftp_client.cwd();
+                //return sftp_client.put(attachment.local_path, '/home/foo/share/test-copy.txt');
             })
     }
 
-    download(attachment_id: string): Promise<any> {
+    download(attachment_id: string): Promise<Attachment> {
         throw new Error("Method not implemented.");
     }
 }

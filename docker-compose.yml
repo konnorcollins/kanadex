@@ -5,9 +5,9 @@ services:
   sftp:
     image: atmoz/sftp:alpine
     volumes:
-        - ./upload:/home/foo/upload
+      - ./share:/home/foo/share
     ports:
-        - "2222:22"
+      - 2222:22
     command: foo:pass:1001
 
   db:
@@ -26,6 +26,8 @@ services:
     build: ./kanadex-api
     ports:
       - 5050:5050
+    env_file:
+      - ./kanadex-api/.env
     depends_on:
       - sftp
       - db
