@@ -2,14 +2,6 @@ version: "3.8"
 
 services:
 
-  sftp:
-    image: atmoz/sftp:alpine
-    volumes:
-      - ./share:/home/foo/share
-    ports:
-      - 2222:22
-    command: foo:pass:1001
-
   db:
     image: postgres:alpine
     restart: always
@@ -26,10 +18,11 @@ services:
     build: ./kanadex-api
     ports:
       - 5050:5050
+    volumes:
+      - local-storage:/data
     env_file:
       - ./kanadex-api/.env
     depends_on:
-      - sftp
       - db
 
 
@@ -39,3 +32,6 @@ services:
       - 3000:3000
     depends_on:
       - api
+
+volumes:
+  local-storage:

@@ -7,16 +7,18 @@ import { Storage } from './storage/storage'
 import { DownloadRequest } from './download_request';
 import { UploadRequest } from './upload_request';
 import { Attachment } from './attachment';
+import { LocalStorage } from './storage/local';
 
 
 
 const upload = multer({ dest: 'uploads/' });
 
-const SFTP_SERVER = process.env.SFTP_SERVER || "localhost";
-const SFTP_PORT = parseInt(process.env.SFTP_PORT || "2222");
-const SFTP_USER = process.env.SFTP_USER || "foo";
-const SFTP_PASSWORD = process.env.SFTP_PASSWORD || "lol";
-const storage: Storage = new SftpStorage(SFTP_SERVER, SFTP_PORT, SFTP_USER, SFTP_PASSWORD);
+//const SFTP_SERVER = process.env.SFTP_SERVER || "localhost";
+//const SFTP_PORT = parseInt(process.env.SFTP_PORT || "7070");
+//const SFTP_USER = process.env.SFTP_USER || "foo";
+//const SFTP_PASSWORD = process.env.SFTP_PASSWORD || "pass";
+//const storage: Storage = new SftpStorage(SFTP_SERVER, SFTP_PORT, SFTP_USER, SFTP_PASSWORD);
+const storage: Storage = new LocalStorage('/data');
 
 const router: Router = express.Router();
 
@@ -29,8 +31,6 @@ router.post('/attachment/upload', upload.single('upload'), async (req, res) => {
         return;
     }
 
-    console.log(file, req.body);
-
     const attachment: Attachment = {
         local_path: file.path
     }
@@ -38,6 +38,7 @@ router.post('/attachment/upload', upload.single('upload'), async (req, res) => {
     const request: UploadRequest = new UploadRequest(storage);
     const attachment_id = await request.upload(attachment, file.mimetype);
 
+    console.log(`Uploaded: ${ attachment_id }`)
     res.status(201).send({ attachment_id: attachment_id })
 });
 

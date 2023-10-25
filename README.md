@@ -15,3 +15,9 @@ This allows for previewing any custom game card image in your preferred color pa
 * add better method of automagically creating palette swap buttons (DONE)
 * add the remainder of in-game color palettes
 * allow for the user to preview their own image
+
+## kanadex-server
+Back-end api.  Monolith.  Handles file upload and retrieval.
+
+## How to run locally
+See the docker-compose.yml
